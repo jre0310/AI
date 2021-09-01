@@ -70,7 +70,9 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    e = Directions.EAST
+    n = Directions.NORTH
+    return  [w, w, w, w, s, s, e, s, s, w]
 
 def depthFirstSearch(problem):
     """
@@ -87,6 +89,19 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+
+    print "Start:" , problem.getStartState()
+    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    print "Start's successors:", problem.getSuccessors(problem.getStartState())
+
+    startLoc = problem.getStartState()
+
+    explored = []
+    
+    fringe = util.Stack()
+    fringe.push(startLoc, [])
+
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
