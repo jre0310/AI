@@ -90,16 +90,54 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
-    print "Start:" , problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    # print "Start:" , problem.getStartState()
+    # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    # print "Start's successors:", problem.getSuccessors(problem.getStartState())
 
-    startLoc = problem.getStartState()
+    # get starting location of pacman
+    startLoc = problem.getStartState()  
 
-    explored = []
+    # list to store the explored nodes 
+    explored = [] 
+
+    # list to store the moves that are going to be returned
+    moves = [] 
     
+    # Create the fringe as a stack and push the initial location 
     fringe = util.Stack()
-    fringe.push(startLoc, [])
+    fringe.push(startLoc)
+    explored.append(startLoc)
+
+    # Start the DFS
+    while(not fringe.isEmpty()):
+
+        print 'Fringe' , fringe.list
+        print 'Explored' , explored
+        print 'Moves' , moves
+
+
+        # remove the current node
+        currentNode = fringe.pop()
+        print 'Current Node: ' , currentNode
+
+        successors = problem.getSuccessors(currentNode)
+        print 'Successors: ' , successors
+
+        for successor in successors:
+
+            nextNode = successor[0]
+            print 'Next Node: ' , nextNode
+            move = successor[1]
+            
+            if nextNode not in explored:
+                if problem.isGoalState(nextNode):
+                    print 'List of moves: ' , moves + [move]
+                    return moves + [move]
+                else:
+                    fringe.push(nextNode)
+                    moves.append(move)
+                    explored.append(nextNode)
+        
 
 
     util.raiseNotDefined()
