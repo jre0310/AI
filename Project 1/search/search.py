@@ -105,40 +105,31 @@ def depthFirstSearch(problem):
     
     # Create the fringe as a stack and push the initial location 
     fringe = util.Stack()
-    fringe.push(startLoc)
-    explored.append(startLoc)
+
+    # Each node in the fringe will consist of a location, list of moves, and cost
+    fringe.push((startLoc, [], 0))
 
     # Start the DFS
     while(not fringe.isEmpty()):
 
-        print 'Fringe' , fringe.list
-        print 'Explored' , explored
-        print 'Moves' , moves
-
-
-        # remove the current node
-        currentNode = fringe.pop()
-        print 'Current Node: ' , currentNode
-
-        successors = problem.getSuccessors(currentNode)
-        print 'Successors: ' , successors
-
-        for successor in successors:
-
-            nextNode = successor[0]
-            print 'Next Node: ' , nextNode
-            move = successor[1]
-            
-            if nextNode not in explored:
-                if problem.isGoalState(nextNode):
-                    print 'List of moves: ' , moves + [move]
-                    return moves + [move]
-                else:
-                    fringe.push(nextNode)
-                    moves.append(move)
-                    explored.append(nextNode)
+        # Pop a node from the fringe to use 
+        currentNode, directions, cost = fringe.pop()
         
+        # Check to see if the current node is a goal state, if it is, return the list of directions 
+        if problem.isGoalState(currentNode):
+            return directions
+        
+        # Check to make sure that the current node is not already in the set of explored nodes
+        # If it is, it means that you looped around and there is not solution
+        if currentNode not in explored:
 
+            # Since it is not in the explored nodes, add it to the explored nodes
+            explored.append(currentNode)
+            
+            # For each successor of the current node, if it is not in explored list, push it to the stack
+            for node, direction, cost in problem.getSuccessors(currentNode):
+                if node not in explored:
+                    fringe.push((node, directions + [direction], cost))
 
     util.raiseNotDefined()
 
