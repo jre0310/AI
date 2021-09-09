@@ -99,9 +99,6 @@ def depthFirstSearch(problem):
 
     # list to store the explored nodes 
     explored = [] 
-
-    # list to store the moves that are going to be returned
-    moves = [] 
     
     # Create the fringe as a stack and push the initial location 
     fringe = util.Stack()
@@ -136,6 +133,36 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+
+    # get starting location of pacman
+    startLoc = problem.getStartState()  
+
+    # list to store the explored nodes 
+    explored = [] 
+    
+    # Create the fringe as a stack and push the initial location 
+    fringe = util.Queue()
+
+    # Each node in the fringe will consist of a location, list of moves, and cost
+    fringe.push((startLoc, [], 0))
+
+    while(not fringe.isEmpty()):
+
+        # Pop a node from the fringe to explore
+        currentNode, directions, cost = fringe.pop()
+
+        # Check the current node to see if it is a goal
+        if problem.isGoalState(currentNode):
+            return directions
+        
+        # for each succesor of the current node, if it is not in the explored list, push it on the queue 
+        # and then add it to the explored list 
+        for nextNode, direction, cost in problem.getSuccessors(currentNode):
+            if nextNode not in explored:
+                fringe.push((nextNode, directions + [direction], cost))
+                explored.append(nextNode)
+
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
