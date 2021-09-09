@@ -168,6 +168,36 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+
+    # get starting location of pacman
+    startLoc = problem.getStartState()  
+
+    # list to store the explored nodes 
+    explored = [] 
+    
+    # Create the fringe as a stack and push the initial location 
+    fringe = util.PriorityQueue()
+
+    # Each node in the fringe will consist of a location, list of moves, and cost
+    fringe.push((startLoc, [], 0), 0)
+
+    while(not fringe.isEmpty()):
+        
+        currentNode, directions, costs = fringe.pop()
+
+        if problem.isGoalState(currentNode):
+            return directions
+
+        if currentNode not in explored:
+            explored.append(currentNode)
+
+            for nextNode, direction, cost in problem.getSuccessors(currentNode):
+                if nextNode not in explored:
+                    fringe.push((nextNode, directions + [direction], costs + cost), costs + cost)
+
+
+
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
