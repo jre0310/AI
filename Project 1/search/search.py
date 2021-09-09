@@ -196,7 +196,7 @@ def uniformCostSearch(problem):
                     fringe.push((nextNode, directions + [direction], costs + cost), costs + cost)
 
 
-
+    # this is a change that I made on my laptop
 
     util.raiseNotDefined()
 
