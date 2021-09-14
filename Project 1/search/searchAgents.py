@@ -295,6 +295,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        return(self.startingPosition, [corner for corner in self.corners])
         util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -302,6 +303,9 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+        if (len(state[1]) == 0):
+            return True
+        return False
         util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -325,6 +329,23 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+
+            x, y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+
+            # next position
+            newPos = (nextx, nexty)
+
+            if not hitsWall:
+                # if this next position is a corner then pop it
+                remainingCorners = state[1][:]
+                if newPos in remainingCorners:
+                    remainingCorners.remove(newPos)
+                # finally you gotta update the position with the new reamining corners 
+                successors.append(((newPos, remainingCorners), action, 1))
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -360,6 +381,36 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+
+    heuristic = 0
+    remainingCorners = state[1][:]
+
+    # from current state calc the manhattan distance
+    currentPos = state[0]
+
+    # find the closest corner
+    # store all distance in a list and find minimum
+    # distanceList = []; define inside as it should be updated
+    # as corners are popped
+
+    # find cost and associated corners
+    while remainingCorners:
+
+        distance = []
+
+        for corner in remainingCorners:
+
+            distance.append((util.manhattanDistance(currentPos, corner), corner))
+        
+        # find the minimum and add to the heuristic 
+        mDistance, corner = min(distance)
+        heuristic += mDistance
+
+        # eliminate the corner that was visited 
+        currentPosition = corner
+        remainingCorners.remove(corner)
+
+
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
