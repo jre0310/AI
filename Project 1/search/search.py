@@ -134,33 +134,30 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
 
-    # get starting location of pacman
-    startLoc = problem.getStartState()  
-
-    # list to store the explored nodes 
-    explored = [] 
-    
-    # Create the fringe as a stack and push the initial location 
+    startState = problem.getStartState()
+    #breadth first uses queue
     fringe = util.Queue()
+    visited = []
 
-    # Each node in the fringe will consist of a location, list of moves, and cost
-    fringe.push((startLoc, [], 0))
+    #the fringe should consist the state, a list containing the actions executed
+    #to reach the state, and cost (cost in dfs & bfs doesnt matter)
+    #format same as that obtained from the defined function
+    fringe.push((startState, [], 0))
 
-    while(not fringe.isEmpty()):
-
-        # Pop a node from the fringe to explore
-        currentNode, directions, cost = fringe.pop()
-
-        # Check the current node to see if it is a goal
-        if problem.isGoalState(currentNode):
-            return directions
-        
-        # for each succesor of the current node, if it is not in the explored list, push it on the queue 
-        # and then add it to the explored list 
-        for nextNode, direction, cost in problem.getSuccessors(currentNode):
-            if nextNode not in explored:
-                fringe.push((nextNode, directions + [direction], cost))
-                explored.append(nextNode)
+    #keep popping till no more nodes in the fringe
+    while not fringe.isEmpty():
+        currentState, actions, costs = fringe.pop()
+        #curcial as this prevents expanding the same node twice
+        if not currentState in visited:
+            #update visited status
+            visited.append(currentState)
+            #if this goal state return the actions to reach it
+            if problem.isGoalState(currentState):
+                return actions
+            #push all successors not in visited
+            for state, action, cost in problem.getSuccessors(currentState):
+                if not state in visited:
+                    fringe.push((state, actions + [action], cost))
 
 
     util.raiseNotDefined()
@@ -225,12 +222,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
         if problem.isGoalState(currentNode):
             return directions
-        
-        for nextNode, direction, cost in problem.getSuccessors(currentNode):
-            if nextNode not in explored:
 
-                heuristicCost = costs + cost + heuristic(nextNode, problem)
-                fringe.push((nextNode, directions + [direction], costs + cost), heuristicCost) 
+        if currentNode not in explored:
+            explored.append(currentNode)
+
+            for nextNode, direction, cost in problem.getSuccessors(currentNode):
+                if nextNode not in explored:
+                    heuristicCost = costs + cost + heuristic(nextNode, problem)
+                    fringe.push((nextNode, directions + [direction], costs + cost), heuristicCost)
 
     util.raiseNotDefined()
 
